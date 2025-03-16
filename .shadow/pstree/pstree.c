@@ -5,7 +5,6 @@
 #include <sys/stat.h>
 #include <stdlib.h>
 #include <string.h>
-#include <node.h>
 #include <tree.h>
 
 void print_func(struct tree* t, struct Node* node, int depth) {
@@ -35,7 +34,7 @@ int main(int argc, char *argv[]) {
   char name[256];
   DIR* dp;
   char* path = "/proc";
-  if ((dp == opendir(path)) == NULL){
+  if ((dp = opendir(path)) == NULL){
     fprintf(stderr, "error happend: %s\n", path);
     return 0;
   }
