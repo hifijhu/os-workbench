@@ -18,11 +18,6 @@ void print_func(struct tree* t, struct Node* node, int depth) {
   }
 }
 int main(int argc, char *argv[]) {
-  struct tree* t = malloc(sizeof(struct tree));
-  t->tree_size = 0;
-  t->tree_capacity = 1024;
-  t->nodes = malloc(sizeof(struct Node) * t->tree_capacity);
-  assert(t->nodes);
 
   for (int i = 0; i < argc; i++) {
     assert(argv[i]);
@@ -77,11 +72,11 @@ int main(int argc, char *argv[]) {
             strcpy(node->name, line + 5);
           }
           if (strncmp(line, "Pid:", 4) == 0) {
-            strcpy(node->pid, line + 4);
+            node->pid = atoi(line + 4);
           }
           if (strncmp(line, "PPid:", 5) == 0) {
-            strcpy(node->ppid, line + 5);
-            struct Node* parent = &t->nodes[atoi(node->ppid)];
+            node->ppid = atoi(line + 5);
+            struct Node* parent = &t->nodes[node->ppid];
             parent->cid[parent->cid_size++] = tindex;
             t->tree_size++;
             break;
