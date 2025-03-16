@@ -55,8 +55,9 @@ int main(int argc, char *argv[]) {
         else {
           continue;
         }
-        char* filename = "/status";
-        FILE *fp = fopen(strcat(strcat(strcat(path, "/"), stp->d_name), filename), "r");
+        char filename[256];
+        snprintf(filename, sizeof(filename), "%s/%s/status", path, stp->d_name);
+        FILE *fp = fopen(filename, "r");
         if (!fp) goto release;
 
         char line[256];
