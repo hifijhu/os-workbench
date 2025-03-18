@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
   }
   closedir(dp);
 
-  print_func(t, t->nodes, 0);
+  print_func(t, t->nodes, 0, p);
 
 
   return 0;
