@@ -10,7 +10,13 @@ void print_func(struct tree* t, struct Node* node, int depth, bool p) {
   for (int i = 0; i < depth; i++) {
     printf("  ");
   }
-  printf("%s(%d)", node->name, node->pid);
+  if (p) {
+    printf("%s(%d)\n", node->name, node->pid);
+  }
+  else {
+    printf("%s\n", node->name);
+  }
+
   for(int i = 0; i < node->cid_size; i++) {
     print_func(t, &t->nodes[node->cid[i]], depth + 1, p);
   }
@@ -85,7 +91,9 @@ int main(int argc, char *argv[]) {
           }
           struct Node* node = &t->nodes[tindex];
           if (strncmp(line, "Name:", 5) == 0) {
-            strcpy(node->name, line + 5);
+            strcpy(node->name, line + 6);
+            int idx = strcspn(node->name, "\n");
+            node->name[idx] = '\0';
           }
           if (strncmp(line, "Pid:", 4) == 0) {
             node->pid = atoi(line + 4);
