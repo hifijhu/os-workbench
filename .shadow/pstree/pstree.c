@@ -1,17 +1,15 @@
 #include <stdio.h>
 #include <assert.h>
 #include <dirent.h>
-#include <unistd.h>
-#include <sys/stat.h>
 #include <stdlib.h>
 #include <string.h>
-#include <tree.h>
+#include "tree.h"
 
 void print_func(struct tree* t, struct Node* node, int depth) {
   for (int i = 0; i < depth; i++) {
     printf("  ");
   }
-  printf("name: %s", node->name);
+  printf("%s", node->name);
   for(int i = 0; i < node->cid_size; i++) {
     print_func(t, &t->nodes[node->cid[i]], depth + 1);
   }
@@ -90,6 +88,7 @@ int main(int argc, char *argv[]) {
   }
   closedir(dp);
 
+  print_func(t, t->nodes, 0);
 
 
   return 0;
