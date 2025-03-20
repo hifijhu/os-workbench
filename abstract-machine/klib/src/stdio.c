@@ -7,7 +7,53 @@
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
 int printf(const char *fmt, ...) {
-  panic("Not implemented");
+  panic("printf not implemented");
+  /*
+  va_list args;
+  va_start(args, fmt);
+  int count = 0;
+  while (*fmt) {
+    if (*fmt == '%') {
+      fmt++;
+      switch (*fmt) {
+        case 'd': {
+          int num = va_arg(args, int);
+          char buffer[32];
+          memcpy((void *)&buffer, (void *)fmt, sizeof(buffer));
+          char *p = buffer;
+          while (*p) {
+            putch(*p);
+            p++;
+          }
+          count += strlen(buffer);
+          break;
+        }
+        case 's': {
+          char *str = va_arg(args, char*);
+          char *p = str;
+          while (*p) {
+            putch(*p);
+            p++;
+          }
+          count += strlen(str);
+          break;
+        }
+        default:
+          putch(*fmt);
+        count++;
+        break;
+      }
+    } else {
+      putch(*fmt);
+      count++;
+    }
+    fmt++;
+  }
+
+  va_end(args);
+  return count;
+
+   */
 }
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
