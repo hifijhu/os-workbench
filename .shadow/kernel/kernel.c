@@ -7876,8 +7876,8 @@ void paint() {
   int i = 0;
   for (int x = 0; x * xratio <= w; x ++) {
     for (int y = 0; y * yratio <= h; y++) {
-      unsigned char color[3] ={ __8_webp[i], __8_webp[i+1], __8_webp[i+2]};
-      draw_tile(x * xratio, y * yratio, xratio, yratio, (uint32_t)*color);
+      //unsigned char color[3] ={ __8_webp[i], __8_webp[i+1], __8_webp[i+2]};
+      draw_tile(x * xratio, y * yratio, xratio, yratio, 0xFFFFFF);
       i += 3;
       if (i+3 > __8_webp_len) i = 0;
     }
@@ -7889,7 +7889,7 @@ int main(const char *args) {
   puts("mainargs = \"");
   puts(args);  // make run mainargs=xxx
   puts("\"\n");
-  // paint();
+  paint();
   while (1) {
     AM_INPUT_KEYBRD_T event = { .keycode = AM_KEY_NONE };
     ioe_read(AM_INPUT_KEYBRD, &event);
