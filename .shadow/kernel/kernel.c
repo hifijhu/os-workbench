@@ -7871,8 +7871,8 @@ void paint() {
   ioe_read(AM_GPU_CONFIG, &info);
   w = info.width;
   h = info.height;
-  int xratio = 1;
-  int yratio = 1;
+  int xratio = (int) (w / pw);
+  int yratio = (int) (h / ph);
   int i = 0;
   for (int x = 0; x * xratio <= w; x ++) {
     for (int y = 0; y * yratio <= h; y++) {
