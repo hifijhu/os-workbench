@@ -7871,13 +7871,13 @@ void paint() {
   ioe_read(AM_GPU_CONFIG, &info);
   w = info.width;
   h = info.height;
-  int xratio = w / pw;
-  int yratio = h / ph;
+  int xratio = 1;
+  int yratio = 1;
   int i = 0;
   for (int x = 0; x * xratio <= w; x ++) {
     for (int y = 0; y * yratio <= h; y++) {
-      //unsigned char color[3] ={ __8_webp[i], __8_webp[i+1], __8_webp[i+2]};
-      draw_tile(x * xratio, y * yratio, xratio, yratio, 0xFFFFFF);
+      unsigned char color[3] ={ __8_webp[i], __8_webp[i+1], __8_webp[i+2]};
+      draw_tile(x * xratio, y * yratio, xratio, yratio, (uint32_t)*color);
       i += 3;
       if (i+3 > __8_webp_len) i = 0;
     }
