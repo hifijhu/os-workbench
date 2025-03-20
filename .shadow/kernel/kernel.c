@@ -2,6 +2,7 @@
 #include <amdev.h>
 #include <klib.h>
 #include <klib-macros.h>
+#include <math.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -7871,8 +7872,11 @@ void paint() {
   ioe_read(AM_GPU_CONFIG, &info);
   w = info.width;
   h = info.height;
-  int xratio = (int) (w / pw);
-  int yratio = (int) (h / ph);
+
+  int xratio = w / pw;
+  int yratio = h / ph;
+  if (xratio < 1) xratio = 1;
+  if (yratio < 1) yratio = 1;
   int i = 0;
   for (int x = 0; x * xratio <= w; x ++) {
     for (int y = 0; y * yratio <= h; y++) {
