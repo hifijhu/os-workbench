@@ -7,6 +7,8 @@
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
 int printf(const char *fmt, ...) {
+  panic("printf not implemented");
+  /*
   va_list args;
   va_start(args, fmt);
   int count = 0;
@@ -50,6 +52,8 @@ int printf(const char *fmt, ...) {
 
   va_end(args);
   return count;
+
+   */
 }
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
