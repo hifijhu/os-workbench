@@ -7529,10 +7529,12 @@ int main(const char *args) {
   puts("\"\n");
   splash();
   while (1) {
-    puts("Yy");
+
     AM_INPUT_KEYBRD_T event = { .keycode = AM_KEY_NONE };
     ioe_read(AM_INPUT_KEYBRD, &event);
+    puts("1");
     if (event.keycode != AM_KEY_NONE && event.keydown) {
+      puts("0");
       print_key();
       //if (strcmp(key_names[event.keycode], "ESCAPE") == 0) break;
     }
