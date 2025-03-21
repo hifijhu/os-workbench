@@ -7530,8 +7530,8 @@ int main(const char *args) {
   puts(args);  // make run mainargs=xxx
   puts("\"\n");
   splash();
-  while (1) {
-    /*
+  /*while (1) {
+    
     AM_INPUT_KEYBRD_T event = { .keycode = AM_KEY_NONE };
     ioe_read(AM_INPUT_KEYBRD, &event);
     puts("1");
@@ -7539,8 +7539,8 @@ int main(const char *args) {
 
 
       //if (strcmp(key_names[event.keycode], "ESCAPE") == 0) break;
-    }*/
-  }
+    }
+  }*/
   //halt(0);
   return 0;
 }
