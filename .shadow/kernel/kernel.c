@@ -7537,6 +7537,6 @@ int main(const char *args) {
     }
     */
   }
-  halt(0);
+  //halt(0);
   return 0;
 }
