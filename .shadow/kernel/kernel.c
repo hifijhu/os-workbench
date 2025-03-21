@@ -7531,6 +7531,7 @@ int main(const char *args) {
   puts("\"\n");
   splash();
   while (1) {
+    puts("1");
    /* 
     AM_INPUT_KEYBRD_T event = { .keycode = AM_KEY_NONE };
     ioe_read(AM_INPUT_KEYBRD, &event);
