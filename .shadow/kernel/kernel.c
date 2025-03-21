@@ -7529,7 +7529,7 @@ int main(const char *args) {
   puts("mainargs = \"");
   puts(args);  // make run mainargs=xxx
   puts("\"\n");
-  splash();
+  paint();
   
   while (1) {
     puts("1");
