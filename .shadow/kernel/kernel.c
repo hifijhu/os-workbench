@@ -7509,8 +7509,8 @@ void paint() {
   if (xratio < 1) xratio = 1;
   if (yratio < 1) yratio = 1;
 
-  for (int y = 0; y * yratio <= h; y ++) {
-    for (int x = 0; x * xratio <= w; x++) {
+  for (int y = 0; y * yratio + yratio <= h; y ++) {
+    for (int x = 0; x * xratio + xratio <= w; x++) {
       uint32_t color = 0;
       for (int j = 0; j < 3; j++) {
         color = color * 256 + (uint32_t)image[y][x][j];
