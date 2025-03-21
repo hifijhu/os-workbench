@@ -7534,9 +7534,9 @@ int main(const char *args) {
     ioe_read(AM_INPUT_KEYBRD, &event);
     puts("1");
     if (event.keycode != AM_KEY_NONE && event.keydown) {
-      puts("0");
+
       print_key();
-      //if (strcmp(key_names[event.keycode], "ESCAPE") == 0) break;
+      if (strcmp(key_names[event.keycode], "ESCAPE") == 0) break;
     }
   }
   //halt(0);
