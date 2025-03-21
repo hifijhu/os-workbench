@@ -7535,8 +7535,8 @@ int main(const char *args) {
     puts("1");
     if (event.keycode != AM_KEY_NONE && event.keydown) {
 
-      print_key();
-      if (strcmp(key_names[event.keycode], "ESCAPE") == 0) break;
+
+      //if (strcmp(key_names[event.keycode], "ESCAPE") == 0) break;
     }
   }
   //halt(0);
