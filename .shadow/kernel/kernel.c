@@ -7533,6 +7533,7 @@ int main(const char *args) {
     AM_INPUT_KEYBRD_T event = { .keycode = AM_KEY_NONE };
     ioe_read(AM_INPUT_KEYBRD, &event);
     if (event.keycode != AM_KEY_NONE && event.keydown) {
+      print_key();
       //if (strcmp(key_names[event.keycode], "ESCAPE") == 0) break;
     }
   }
