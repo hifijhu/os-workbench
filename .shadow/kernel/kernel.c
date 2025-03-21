@@ -7515,15 +7515,11 @@ void paint() {
       for (int j = 0; j < 3; j++) {
         assert(y <= ph);
         assert(x <= pw);
-
         assert(j <= 3);
         color = color * 256 + (uint32_t)image[y][x][j];
       }
       draw_tile(x * xratio, y * yratio, xratio, yratio, color);
-
-
     }
-    puts("x");
   }
   puts("end\n");
 }
@@ -7535,7 +7531,7 @@ int main(const char *args) {
   puts("\"\n");
   paint();
   while (1) {
-
+    /*
     AM_INPUT_KEYBRD_T event = { .keycode = AM_KEY_NONE };
     ioe_read(AM_INPUT_KEYBRD, &event);
     puts("1");
@@ -7543,7 +7539,7 @@ int main(const char *args) {
 
 
       //if (strcmp(key_names[event.keycode], "ESCAPE") == 0) break;
-    }
+    }*/
   }
   //halt(0);
   return 0;
