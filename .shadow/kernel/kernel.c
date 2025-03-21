@@ -7508,7 +7508,7 @@ void paint() {
   int yratio = h / ph;
   if (xratio < 1) xratio = 1;
   if (yratio < 1) yratio = 1;
-  puts("1");
+
   for (int y = 0; y * yratio <= h; y ++) {
     for (int x = 0; x * xratio <= w; x++) {
       uint32_t color = 0;
@@ -7519,7 +7519,9 @@ void paint() {
 
 
     }
+    puts("x");
   }
+  puts("end\n");
 }
 int main(const char *args) {
   ioe_init();
