@@ -7530,6 +7530,7 @@ int main(const char *args) {
   puts(args);  // make run mainargs=xxx
   puts("\"\n");
   splash();
+  puts("1");
   while (1) {
     puts("1");
    /* 
