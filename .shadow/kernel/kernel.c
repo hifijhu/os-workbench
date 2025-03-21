@@ -7504,8 +7504,8 @@ void paint() {
   w = info.width;
   h = info.height;
 
-  int xratio = w / pw;
-  int yratio = h / ph;
+  int xratio = w / pw + 1;
+  int yratio = h / ph + 1;
   if (xratio < 1) xratio = 1;
   if (yratio < 1) yratio = 1;
 
