@@ -1,5 +1,6 @@
 #include <am.h>
 #include <amdev.h>
+
 #include <klib.h>
 #include <klib-macros.h>
 #include <stdint.h>
@@ -7513,6 +7514,7 @@ void paint() {
     for (int x = 0; x * xratio + xratio <= w; x++) {
       uint32_t color = 0;
       for (int j = 0; j < 3; j++) {
+        assert(x <= pw && y <= ph && j <= 3);
         color = color * 256 + (uint32_t)image[y][x][j];
       }
       draw_tile(x * xratio, y * yratio, xratio, yratio, color);
