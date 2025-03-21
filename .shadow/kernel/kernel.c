@@ -7532,7 +7532,7 @@ int main(const char *args) {
 
     AM_INPUT_KEYBRD_T event = { .keycode = AM_KEY_NONE };
     ioe_read(AM_INPUT_KEYBRD, &event);
-    puts("1");
+
     if (event.keycode != AM_KEY_NONE && event.keydown) {
       puts("0");
       print_key();
