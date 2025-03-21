@@ -7527,14 +7527,15 @@ int main(const char *args) {
   puts("mainargs = \"");
   puts(args);  // make run mainargs=xxx
   puts("\"\n");
-  //paint();
+  paint();
   while (1) {
+    /*
     AM_INPUT_KEYBRD_T event = { .keycode = AM_KEY_NONE };
     ioe_read(AM_INPUT_KEYBRD, &event);
     if (event.keycode != AM_KEY_NONE && event.keydown) {
       if (strcmp(key_names[event.keycode], "ESCAPE") == 0) break;
     }
-
+    */
   }
   halt(0);
   return 0;
