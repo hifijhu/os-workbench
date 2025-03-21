@@ -7528,6 +7528,7 @@ int main(const char *args) {
   puts(args);  // make run mainargs=xxx
   puts("\"\n");
   //paint();
+  halt(0);
   while (1) {
     /*
     AM_INPUT_KEYBRD_T event = { .keycode = AM_KEY_NONE };
