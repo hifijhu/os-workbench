@@ -7,8 +7,8 @@
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
 int printf(const char *fmt, ...) {
-  panic("printf not implemented");
-  /*
+  // panic("printf not implemented");
+  
   va_list args;
   va_start(args, fmt);
   int count = 0;
@@ -19,7 +19,7 @@ int printf(const char *fmt, ...) {
         case 'd': {
           int num = va_arg(args, int);
           char buffer[32];
-          memcpy((void *)&buffer, (void *)fmt, sizeof(buffer));
+          memcpy((void *)&buffer, (void *)&num, sizeof(buffer));
           char *p = buffer;
           while (*p) {
             putch(*p);
@@ -53,7 +53,6 @@ int printf(const char *fmt, ...) {
   va_end(args);
   return count;
 
-   */
 }
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
