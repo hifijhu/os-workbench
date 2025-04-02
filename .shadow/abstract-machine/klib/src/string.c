@@ -114,7 +114,7 @@ void *memcpy(void *out, const void *in, size_t n) {
   // panic("memcpy not implemented");
   
   assert(out && in);
-  assert(sizeof(out) >= n && sizeof(in) >= n);
+  
   char* u = (char *)out;
   const char* l = (char*) in;
   for(; n > 0; n--) {
