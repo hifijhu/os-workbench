@@ -19,6 +19,7 @@ int printf(const char *fmt, ...) {
         case 'd': {
           int num = va_arg(args, int);
           char buffer[32];
+          itoa(num, buffer, 10);
           memcpy((void *)&buffer, (void *)&num, sizeof(buffer));
           char *p = buffer;
           while (*p) {
@@ -36,6 +37,28 @@ int printf(const char *fmt, ...) {
             p++;
           }
           count += strlen(str);
+          break;
+        }
+        case 'p': { // 处理指针
+          void *ptr = va_arg(args, void*); // 获取指针值
+          char buffer[32];
+          uintptr_t addr = (uintptr_t)ptr; // 将指针转换为无符号整数
+          char *p = buffer;
+        
+          // 添加 "0x" 前缀
+          *p++ = '0';
+          *p++ = 'x';
+        
+          // 将地址转换为十六进制字符串
+          itoa(addr, p, 16);
+        
+          // 从 buffer 的起始位置输出
+          char *start = buffer;
+          while (*start) {
+            putch(*start);
+            start++;
+          }
+          count += strlen(buffer); // 更新输出字符计数
           break;
         }
         default:
