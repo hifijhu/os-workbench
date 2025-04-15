@@ -20,7 +20,6 @@ int printf(const char *fmt, ...) {
           int num = va_arg(args, int);
           char buffer[32];
           itoa(num, buffer, 10);
-          memcpy((void *)&buffer, (void *)&num, sizeof(buffer));
           char *p = buffer;
           while (*p) {
             putch(*p);
