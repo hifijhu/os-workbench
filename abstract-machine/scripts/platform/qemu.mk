@@ -4,10 +4,10 @@ smp        ?= 1
 LDFLAGS    += -N -Ttext-segment=0x00100000
 QEMU_FLAGS += -serial mon:stdio \
               -machine accel=tcg \
-              -smp "$(smp),cores=$(smp),sockets=1" \
+              -smp "$(smp),sockets=$(smp),cores=1" \
               -drive format=raw,file=$(IMAGE) \
 			  -vga std
-
+# QEMU_FLAGS += -s -S
 build-arg: image
 	@( echo -n $(mainargs); ) | dd if=/dev/stdin of=$(IMAGE) bs=512 count=2 seek=1 conv=notrunc status=none
 
