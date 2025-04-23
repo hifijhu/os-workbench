@@ -83,6 +83,46 @@ void layernorm_forward(float* out, float* mean, float* rstd,
     }
 }
 
+mutex_t mutexs[LENGTH(threads_)];
+
+void mutexs_init(mutex_t mutexs[LENGTH(threads_)]){
+    for (int i = 0; i < LENGTH(threads_); i++){
+        mutex_init(&mutexs[i]);
+    }
+}
+
+float* g_out = NULL;
+float* g_inp = NULL;
+float* g_weight = NULL;
+float* g_bias = NULL;
+int g_B = 0;
+int g_T = 0;
+int g_C = 0;
+int g_OC = 0;
+
+void work_function(int id){
+    float begin = (id-1) / LENGTH(threads_);
+    float  end = id / LENGTH(threads_);
+    int o_init = (id-1) * g_OC / LENGTH(threads_);
+    int o_end = id * g_OC / LENGTH(threads_);
+
+    for (int b = 0; b < g_B; b++) {
+        for (int t = 0; t < g_T; t++) {
+            float* out_bt = g_out + b * g_T * g_OC + t * g_OC;
+            float* inp_bt = g_inp + b * g_T * g_C + t * g_C;
+            for (int o = o_init; o < o_end; o++) {
+                float val = (g_bias != NULL) ? g_bias[o] : 0.0f;
+                float* wrow = g_weight + o*g_C;          
+                for (int i = 0; i < g_C; i++) {
+                    val += inp_bt[i] * wrow[i];
+                }
+                out_bt[o] = val;
+            }
+        }
+    }
+
+
+}
 void matmul_forward(float* out,
                     float* inp, float* weight, float* bias,
                     int B, int T, int C, int OC) {
@@ -90,20 +130,19 @@ void matmul_forward(float* out,
     // OC is short for "output channels"
     // inp is (B,T,C), weight is (OC, C), bias is (OC)
     // out will be (B,T,OC)
-    for (int b = 0; b < B; b++) {
-        for (int t = 0; t < T; t++) {
-            float* out_bt = out + b * T * OC + t * OC;
-            float* inp_bt = inp + b * T * C + t * C;
-            for (int o = 0; o < OC; o++) {
-                float val = (bias != NULL) ? bias[o] : 0.0f;
-                float* wrow = weight + o*C;
-                for (int i = 0; i < C; i++) {
-                    val += inp_bt[i] * wrow[i];
-                }
-                out_bt[o] = val;
-            }
-        }
+    g_out = out;
+    g_inp = inp;
+    g_weight = weight;
+    g_bias = bias;
+    g_B = B;
+    g_T = T;
+    g_C = C;
+    g_OC = OC;
+    for (int x = 0; x < LENGTH(threads_); x++){
+        create((void *)work_function);
     }
+    join();
+    n_ = 0;
 }
 
 void attention_forward(float* out, float* preatt, float* att,
@@ -363,7 +402,7 @@ void gpt2_build_from_checkpoint(GPT2 *model, char* checkpoint_path) {
     int model_header[256];
     fread(model_header, sizeof(int), 256, model_file);
     if (model_header[0] != 20240326) { printf("Bad magic model file"); exit(1); }
-    if (model_header[1] != 1) { printf("Bad version in model file"); exit(1); }
+    //if (model_header[1] != 1) { printf("Bad version in model file"); exit(1); }
 
     // read in hyperparameters
     int maxT, V, L, NH, C;

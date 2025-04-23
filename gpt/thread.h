@@ -21,7 +21,7 @@ struct thread {
 };
 
 // You only allow to create a small number of threads.
-static struct thread threads_[16];
+static struct thread threads_[4];
 static int n_ = 0;
 
 // This is the entry for a created POSIX thread. It "wraps"
@@ -32,14 +32,28 @@ static inline
 void *wrapper_(void *arg) {
     struct thread *t = (struct thread *)arg;
     t->entry(t->id);
-    return NULL;
+    return NULL; 
 }
+
+// clean a thread and free resource
+/*static inline void cleanup(struct thread* t){
+    if (t->status == T_LIVE){
+        pthread_join(t->thread, NULL);
+    }
+    t->status = T_FREE;
+    t->id = 0;
+    t->entry = NULL;
+}*/
 
 // Create a thread that calls function fn. fn takes an integer
 // thread id as input argument.
 static inline
 void create(void *fn) {
     assert(n_ < LENGTH(threads_));
+
+    /*if (threads_[n_].status != T_FREE) {
+        cleanup(&threads_[n_]);
+    }*/
 
     // Yes, we have resource leak here!
     threads_[n_] = (struct thread) {

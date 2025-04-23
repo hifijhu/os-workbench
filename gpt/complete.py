@@ -1,7 +1,10 @@
 import tiktoken
 import subprocess
+import time
+text = "Ladies and"
 
-text = input("Text to complete: ")
+t1 = time.perf_counter()
+
 enc = tiktoken.get_encoding("gpt2")
 
 tokens = [
@@ -17,3 +20,7 @@ proc = subprocess.Popen(
 while (line := proc.stdout.readline()):
     token = int(line)
     print(enc.decode([token]), end='', flush=True)
+
+print()
+t2 = time.perf_counter()
+print("time cost: %s s" %(t2-t1))
