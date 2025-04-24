@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
         }
 
         close(fd);
-
+        printf("1\n");
         int pid = fork();
         if (pid == 0){
             execlp("gcc", temp, "-o", exec_name, NULL);
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
             perror("fork");
             return 1;
         }
-
+        
         int ppid = fork();
         if (ppid == 0){
             char* const pargv[] = {NULL};
