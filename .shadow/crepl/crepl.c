@@ -14,9 +14,8 @@ int main(int argc, char *argv[]) {
             break;
         }
         
-
         // To be implemented.
-        char *temp = "/tmp/XXXXXX";printf("1\n");
+        char temp[256] = "/tmp/XXXXXX";
         int fd = mkstemp(temp);
         if (fd == -1){
             perror("mkstemp");
