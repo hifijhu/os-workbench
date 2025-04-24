@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
         
 
         // To be implemented.
-        char *temp = "/tmp/XXXXXX.c";
+        char *temp = "/tmp/XXXXXX";
         int fd = mkstemp(temp);
         if (fd == -1){
             perror("mkstemp");
