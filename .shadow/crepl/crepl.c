@@ -15,6 +15,7 @@ int main(int argc, char *argv[]) {
         }
         
         // To be implemented.
+        int pipe_fd[2];
         char temp[128] = "tmp/XXXXXX";
         int fd = mkstemp(temp);
         if (fd == -1){
@@ -25,7 +26,7 @@ int main(int argc, char *argv[]) {
         char pre[20] = "int main(){ return ";
         char aft[3] = ";}";
         write(fd, pre, sizeof(pre));
-        write(fd, line , sizeof(line));
+        write(fd, line , strlen(line));
         write(fd, aft, sizeof(aft));
 
         char new_name[256];
@@ -40,6 +41,11 @@ int main(int argc, char *argv[]) {
 
         close(fd);
         
+        if (pipe(pipe_fd) < 0){
+            perror("pipe");
+            return 1;
+        }
+
         int pid = fork();
         if (pid == 0){
             execlp("gcc", temp, "-o", exec_name, NULL);
