@@ -23,8 +23,11 @@ int main(int argc, char *argv[]) {
             close(fd);
             return 1;
         }
-
+        char* pre = "int main(){ return ";
+        char* aft = ";}";
+        write(fd, pre, sizeof(pre));
         write(fd, line , sizeof(line));
+        write(fd, aft, sizeof(aft));
 
         char new_name[256];
         char exec_path[256];
