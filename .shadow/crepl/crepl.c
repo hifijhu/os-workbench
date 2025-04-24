@@ -16,8 +16,8 @@ int main(int argc, char *argv[]) {
         
 
         // To be implemented.
-        char *temp = "/tmp/XXXXXX";
-        int fd = mkstemp(temp);printf("1\n");
+        char *temp = "/tmp/XXXXXX";;printf("1\n");
+        int fd = mkstemp(temp)
         if (fd == -1){
             perror("mkstemp");
             close(fd);
