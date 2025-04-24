@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
         char exec_path[256];
         char exec_name[256];
         snprintf(exec_name, sizeof(exec_name), "%s", temp);
-        snprintf(exec_path, sizeof(exec_path), "./%s", temp);
+        snprintf(exec_path, sizeof(exec_path), "./tmp/%s", temp);
         snprintf(new_name, sizeof(new_name), "%s.c", temp);
         if (rename(new_name, temp) != 0){
             perror("rename");
