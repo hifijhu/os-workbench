@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
         }
         
         // To be implemented.
-        char temp[128] = "/tmp/XXXXXX";
+        char temp[128] = "tmp/XXXXXX";
         int fd = mkstemp(temp);
         if (fd == -1){
             perror("mkstemp");
@@ -29,10 +29,8 @@ int main(int argc, char *argv[]) {
         write(fd, aft, sizeof(aft));
 
         char new_name[256];
-        char exec_path[256];
         char exec_name[256];
         snprintf(exec_name, sizeof(exec_name), "%s", temp);
-        snprintf(exec_path, sizeof(exec_path), "./tmp/%s", temp);
         snprintf(new_name, sizeof(new_name), "%s.c", temp);
         if (rename(temp, new_name) != 0){
             perror("rename");
@@ -57,7 +55,7 @@ int main(int argc, char *argv[]) {
         int ppid = fork();
         if (ppid == 0){
             char* const pargv[] = {NULL};
-            execv(exec_path, pargv);
+            execv(exec_name, pargv);
 
         } else if (ppid > 0){
             int sstatus;
