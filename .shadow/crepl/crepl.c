@@ -25,9 +25,9 @@ int main(int argc, char *argv[]) {
         }
         char pre[20] = "int main(){ return ";
         char aft[3] = ";}";
-        write(fd, pre, sizeof(pre));
+        write(fd, pre, strlen(pre));
         write(fd, line , strlen(line));
-        write(fd, aft, sizeof(aft));
+        write(fd, aft, strlen(aft));
 
         char new_name[256];
         char exec_name[256];
