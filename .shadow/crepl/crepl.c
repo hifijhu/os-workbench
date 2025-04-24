@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
 
         // To be implemented.
         char *temp = "/tmp/XXXXXX";
-        int fd = mkstemp(temp);
+        int fd = mkstemp(temp);printf("1\n");
         if (fd == -1){
             perror("mkstemp");
             close(fd);
@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
         }
 
         close(fd);
-        printf("1\n");
+        
         int pid = fork();
         if (pid == 0){
             execlp("gcc", temp, "-o", exec_name, NULL);
