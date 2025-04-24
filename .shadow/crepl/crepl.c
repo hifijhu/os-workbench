@@ -23,8 +23,8 @@ int main(int argc, char *argv[]) {
             close(fd);
             return 1;
         }
-        char* pre = "int main(){ return ";
-        char* aft = ";}";
+        char pre[20] = "int main(){ return ";
+        char aft[3] = ";}";
         write(fd, pre, sizeof(pre));
         write(fd, line , sizeof(line));
         write(fd, aft, sizeof(aft));
