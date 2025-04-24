@@ -27,8 +27,10 @@ int main(int argc, char *argv[]) {
         write(fd, line , sizeof(line));
 
         char new_name[256];
-        char exec_file[256];
-        snprintf(exec_file, sizeof(exec_file), "./%s", temp);
+        char exec_path[256];
+        char exec_name[256];
+        snprintf(exec_name, sizeof(exec_name), "%s", temp);
+        snprintf(exec_path, sizeof(exec_path), "./%s", temp);
         snprintf(new_name, sizeof(new_name), "%s.c", temp);
         if (rename(new_name, temp) != 0){
             perror("rename");
@@ -40,7 +42,7 @@ int main(int argc, char *argv[]) {
 
         int pid = fork();
         if (pid == 0){
-            execlp("gcc", temp, "-o", exec_file);
+            execlp("gcc", temp, "-o", exec_name);
         } else if (pid > 0){
             int status;
             waitpid(pid, &status, 0);
@@ -51,8 +53,9 @@ int main(int argc, char *argv[]) {
         }
 
         int ppid = fork();
-        if (ppid = 0){
-            execv(exec_file, "");
+        if (ppid == 0){
+            char* const pargv[] = {NULL};
+            execv(exec_path, pargv);
 
         } else if (ppid > 0){
             int sstatus;
