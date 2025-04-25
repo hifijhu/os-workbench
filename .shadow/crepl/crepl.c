@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
         }
         
         // To be implemented.
-        int pipe_fd[2];
+        // int pipe_fd[2];
         char temp[128] = "tmp/XXXXXX";
         int fd = mkstemp(temp);
         if (fd == -1){
@@ -33,7 +33,18 @@ int main(int argc, char *argv[]) {
         char exec_name[256];
         snprintf(exec_name, sizeof(exec_name), "%s", temp);
         snprintf(new_name, sizeof(new_name), "%s.c", temp);
-        if (rename(temp, new_name) != 0){
+        
+        size_t len_new_name = strlen(new_name);
+        char *p_new_name = (char *)malloc(len_new_name+1);
+        strncpy(p_new_name, new_name, len_new_name);
+        p_new_name[len_new_name] = "\0";
+
+        size_t len_exec_name = strlen(exec_name);
+        char *p_exec_name = (char *)malloc(len_exec_name+1);
+        strncpy(p_exec_name, exec_name, len_exec_name);
+        p_exec_name[len_exec_name] = "\0";
+
+        if (rename(temp, p_new_name) != 0){
             perror("rename");
             close(fd);
             return 1;
@@ -41,14 +52,14 @@ int main(int argc, char *argv[]) {
 
         close(fd);
         
-        if (pipe(pipe_fd) < 0){
+        /*if (pipe(pipe_fd) < 0){
             perror("pipe");
             return 1;
-        }
+        }*/
 
         int pid = fork();
         if (pid == 0){
-            execlp("gcc", temp, "-o", exec_name, NULL);
+            execlp("gcc", temp, "-o", p_exec_name, NULL);
         } else if (pid > 0){
             int status;
             waitpid(pid, &status, 0);
@@ -61,7 +72,7 @@ int main(int argc, char *argv[]) {
         int ppid = fork();
         if (ppid == 0){
             char* const pargv[] = {NULL};
-            execv(exec_name, pargv);
+            execv(p_exec_name, pargv);
 
         } else if (ppid > 0){
             int sstatus;
