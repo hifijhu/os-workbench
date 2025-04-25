@@ -59,7 +59,8 @@ int main(int argc, char *argv[]) {
 
         int pid = fork();
         if (pid == 0){
-            execlp("gcc", p_new_name, "-o", p_exec_name, NULL);
+            printf("%s, %s", p_new_name, p_exec_name);
+            execlp("gcc","gcc",  p_new_name, "-o", p_exec_name, NULL);
         } else if (pid > 0){
             int status;
             waitpid(pid, &status, 0);
