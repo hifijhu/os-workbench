@@ -37,12 +37,12 @@ int main(int argc, char *argv[]) {
         size_t len_new_name = strlen(new_name);
         char *p_new_name = (char *)malloc(len_new_name+1);
         strncpy(p_new_name, new_name, len_new_name);
-        p_new_name[len_new_name] = "\0";
+        p_new_name[len_new_name] = '\0';
 
         size_t len_exec_name = strlen(exec_name);
         char *p_exec_name = (char *)malloc(len_exec_name+1);
         strncpy(p_exec_name, exec_name, len_exec_name);
-        p_exec_name[len_exec_name] = "\0";
+        p_exec_name[len_exec_name] = '\0';
 
         if (rename(temp, p_new_name) != 0){
             perror("rename");
