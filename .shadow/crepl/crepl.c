@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
         }
         
         // To be implemented.
-        int pipe_fd[2];
+        //int pipe_fd[2];
         char temp[128] = "tmp/XXXXXX";
         int fd = mkstemp(temp);
         if (fd == -1){
@@ -52,10 +52,10 @@ int main(int argc, char *argv[]) {
 
         close(fd);
         
-        if (pipe(pipe_fd) < 0){
+        /*if (pipe(pipe_fd) < 0){
             perror("pipe");
             return 1;
-        }
+        }*/
 
         int pid = fork();
         if (pid == 0){
@@ -72,23 +72,17 @@ int main(int argc, char *argv[]) {
         int ppid = fork();
         if (ppid == 0){
             char* const pargv[] = {NULL};
-            close(pipe_fd[0]);
-            dup2(pipe_fd[1], STDOUT_FILENO);
-            close(pipe_fd[1]);
             execv(p_exec_name, pargv);
 
         } else if (ppid > 0){
-            close(pipe_fd[1]);
             char buffer[128];
             int sstatus;
             waitpid(ppid, &sstatus, 0);
-            ssize_t n = read(pipe_fd[0], buffer, sizeof(buffer));
-            if (n > 0){
-                buffer[n] = '\0';
-                printf("=%s\n", buffer);
+            if (WIFEXITED(sstatus)){
+                int exit_code = WEXITSTATUS(sstatus);
+                printf("%d\n", exit_code);
             }
-            printf("=%d\n", sstatus);
-            close(pipe_fd[0]);
+ 
         } else {
             perror("ppid");
             return 1;
