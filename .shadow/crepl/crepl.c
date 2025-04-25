@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
                 buffer[n] = '\0';
                 printf("=%s\n", buffer);
             }
-            printf("=%s\n", sstatus);
+            printf("=%d\n", sstatus);
             close(pipe_fd[0]);
         } else {
             perror("ppid");
