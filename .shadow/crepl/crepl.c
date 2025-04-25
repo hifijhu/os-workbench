@@ -80,13 +80,14 @@ int main(int argc, char *argv[]) {
         } else if (ppid > 0){
             close(pipe_fd[1]);
             char buffer[128];
+            int sstatus;
+            waitpid(ppid, &sstatus, 0);
             ssize_t n = read(pipe_fd[0], buffer, sizeof(buffer));
             if (n > 0){
                 buffer[n] = '\0';
                 printf("=%s\n", buffer);
             }
-            int sstatus;
-            waitpid(ppid, &sstatus, 0);
+            close(pipe_fd[0]);
         } else {
             perror("ppid");
             return 1;
