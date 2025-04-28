@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
             return 1;
         }
         char* pre = "#include <stdio.h>\nint main(){ int result = ";
-        char* aft = ";\nprintf(\"%%d\",result);}";
+        char* aft = ";\nprintf(\"%d\",result);}";
         write(fd, pre, strlen(pre));
         write(fd, line , strlen(line));
         write(fd, aft, strlen(aft));
