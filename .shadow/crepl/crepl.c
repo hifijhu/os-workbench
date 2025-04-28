@@ -7,6 +7,7 @@
 int main(int argc, char *argv[]) {
     static char line[4096];
     int count = 0;
+    int flag = 0;
     const char* expr = "expr_wrapper";
     const char* cond = "int ";
     while (1) {
@@ -33,6 +34,7 @@ int main(int argc, char *argv[]) {
         char routine[256];
         char func_name[256];
         if(strncmp(cond, line, strlen(cond)) == 0){
+            flag = 1;
             int i = 0;
             int j = strlen(cond);
             while(i < 255 && line[j] != '('){
@@ -46,9 +48,7 @@ int main(int argc, char *argv[]) {
         else{
             snprintf(func_name, sizeof(func_name), "expr_wrapper%d", count);
             
-
             snprintf(routine, sizeof(routine), "int expr_wrapper%d(){return %s;}", count, p_line);
-        
         }
         
         size_t len_func_name = strlen(func_name);
@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
         int (*excu)(void);
         char *error;
 
-        handle = dlopen(p_lib_name, RTLD_LAZY);
+        handle = dlopen(p_lib_name, RTLD_LAZY | RTLD_GLOBAL);
         if(!handle){
             perror("handle");
             return 1;
@@ -110,17 +110,24 @@ int main(int argc, char *argv[]) {
 
         dlerror();
 
-        *(void **) (&excu) = dlsym(handle, p_func_name);
-        if((error = dlerror()) != NULL){
-            perror("dlsym");
-            dlclose(handle);
-            return 1;
+        if (flag == 1){
+            printf("function %s has loaded.\n", p_func_name);
         }
+        else{
+            *(void **) (&excu) = dlsym(handle, p_func_name);
+            if((error = dlerror()) != NULL){
+                perror("dlsym");
+                dlclose(handle);
+                return 1;
+            }
 
         printf("= %d\n", excu());
 
+        }
+        
         dlclose(handle);
 
         count++;
+        flag = 0;
     }
 }
