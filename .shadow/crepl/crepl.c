@@ -11,6 +11,8 @@ int main(int argc, char *argv[]) {
     const char* expr = "expr_wrapper";
     const char* cond = "int ";
     while (1) {
+        count++;
+        flag = 0;
         printf("crepl> ");
         fflush(stdout);
 
@@ -136,7 +138,6 @@ int main(int argc, char *argv[]) {
         
         //dlclose(handle);
 
-        count++;
-        flag = 0;
+        
     }
 }
