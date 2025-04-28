@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
             return 1;
         }
         char* pre = "#include <unistd.h>\nint main(){ int result = ";
-        char* aft = ";\nwrite(STDOUT_FILENO, &result, sizeof(result));}";
+        char* aft = ";\nwrite(STDOUT_FILENO, (char *)&result, sizeof((char)result));}";
         write(fd, pre, strlen(pre));
         write(fd, line , strlen(line));
         write(fd, aft, strlen(aft));
