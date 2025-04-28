@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
         char* p_func_name = (char*) malloc(len_func_name+1);
         strncpy(p_func_name, func_name, len_func_name);
         p_func_name[len_func_name] = '\0';
-        printf("%s, %s\n", func_name, p_func_name);
+
         write(fd, routine, strlen(routine));
 
 
@@ -125,7 +125,7 @@ int main(int argc, char *argv[]) {
 
         }
         
-        dlclose(handle);
+        //dlclose(handle);
 
         count++;
         flag = 0;
