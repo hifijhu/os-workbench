@@ -112,8 +112,8 @@ int main(int argc, char *argv[]) {
         void *handle;
         int (*excu)(void);
         char *error;
-
-        handle = dlopen(p_lib_name, RTLD_LAZY | RTLD_GLOBAL);printf("mark1");
+printf("mark1");
+        handle = dlopen(p_lib_name, RTLD_LAZY | RTLD_GLOBAL);
         if(!handle){
             perror("handle");
             return 1;
