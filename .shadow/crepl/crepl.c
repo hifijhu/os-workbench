@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 
         char routine[256];
         char func_name[256];
-        if(strncmp(cond, line, sizeof(cond)) == 0){
+        if(strncmp(cond, line, strlen(cond)) == 0){
             int i = 0;
             int j = 4;
             while(i < 256 && line[j] != '('){
