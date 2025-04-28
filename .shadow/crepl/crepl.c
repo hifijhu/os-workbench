@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
         int (*excu)(void);
         char *error;
 
-        handle = dlopen(p_lib_name, RTLD_NOW | RTLD_GLOBAL);
+        handle = dlopen(p_lib_name, RTLD_LAZY | RTLD_GLOBAL);
         if(!handle){
             perror("handle");
             return 1;
