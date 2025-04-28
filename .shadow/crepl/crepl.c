@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
         }
         
         void *handle;
-        void (*excu)(void);
+        int (*excu)(void);
         char *error;
 
         handle = dlopen(lib_name, RTLD_LAZY);
@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
             return 1;
         }
 
-        excu();
+        printf("= %d\n", excu());
 
         dlclose(handle);
 
