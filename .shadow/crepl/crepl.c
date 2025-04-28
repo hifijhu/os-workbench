@@ -86,9 +86,10 @@ int main(int argc, char *argv[]) {
 
         int pid = fork();
         if (pid == 0){
+            
             execlp("gcc","gcc", "-FPIC", "-shared", p_new_name, "-o", p_lib_name, NULL);
             perror("execlp");
-            return 1;
+            exit(-1);
         } else if (pid > 0){
             int status;
             waitpid(pid, &status, 0);
