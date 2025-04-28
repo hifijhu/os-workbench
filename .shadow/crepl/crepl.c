@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
         }
 
         close(fd);
-
+printf("mark1");
         int pid = fork();
         if (pid == 0){
             
@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) {
         void *handle;
         int (*excu)(void);
         char *error;
-printf("mark1");
+
         handle = dlopen(p_lib_name, RTLD_LAZY | RTLD_GLOBAL);
         if(!handle){
             perror("handle");
