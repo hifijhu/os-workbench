@@ -24,8 +24,13 @@ int main(int argc, char *argv[]) {
             return 1;
         }
 
+        size_t len_line = strlen(line);
+        char *p_line = (char *)malloc(len_line+1);
+        strncpy(p_line, line, len_line);
+        p_line[len_line] = '\0';
+
         char routine[256];
-        snprintf(routine, sizeof(routine), "int expr_wrapper%d(){return %s;}", count, line);
+        snprintf(routine, sizeof(routine), "int expr_wrapper%d(){return %s;}", count, p_line);
         write(fd, routine, strlen(routine));
 
         char new_name[256];
