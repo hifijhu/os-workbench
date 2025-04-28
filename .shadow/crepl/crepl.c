@@ -36,7 +36,9 @@ int main(int argc, char *argv[]) {
         char new_name[256];
         char lib_name[256];
 
-        snprintf(lib_name, sizeof(lib_name), "lib%s.so", temp);
+        char* mid = malloc(sizeof(char) * 6);
+        strncpy(mid, temp+4, 6);
+        snprintf(lib_name, sizeof(lib_name), "tmp/lib%s.so", mid);
         snprintf(new_name, sizeof(new_name), "%s.c", temp);
 
         size_t len_new_name = strlen(new_name);
