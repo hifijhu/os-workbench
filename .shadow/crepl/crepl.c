@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
 
         write(fd, routine, strlen(routine));
 
-printf("mark1\n");
+
         char new_name[256];
         char lib_name[256];
 
@@ -108,7 +108,7 @@ printf("mark1\n");
             perror("fork");
             return 1;
         }
-        
+        printf("mark1\n");
         void *handle;
         int (*excu)(void);
         char *error;
