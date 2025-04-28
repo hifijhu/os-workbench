@@ -88,8 +88,11 @@ int main(int argc, char *argv[]) {
 
         int pid = fork();
         if (pid == 0){
-            
-            execlp("gcc","gcc", "-fPIC", "-shared", p_new_name, "-o", p_lib_name, NULL);
+            #ifdef __x86_64__
+                execlp("gcc","gcc", "-m64", "-fPIC", "-shared", p_new_name, "-o", p_lib_name, NULL);
+            #elif __i386__
+                execlp("gcc","gcc", "-m32", "-fPIC", "-shared", p_new_name, "-o", p_lib_name, NULL);
+            #endif
             perror("execlp");
             exit(-1);
         } else if (pid > 0){
