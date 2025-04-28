@@ -114,7 +114,8 @@ int main(int argc, char *argv[]) {
         char *error;
 
         handle = dlopen(p_lib_name, RTLD_LAZY | RTLD_GLOBAL);
-        if(!handle){printf("mark1\n");
+        if(!handle){
+            printf("%s\n", p_lib_name);
             perror("handle");
             return 1;
         }
