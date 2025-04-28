@@ -93,6 +93,14 @@ int main(int argc, char *argv[]) {
         } else if (pid > 0){
             int status;
             waitpid(pid, &status, 0);
+
+            if (WIFEXITED(status)) {
+                int exit_code = WEXITSTATUS(status);
+                if (exit_code != 0){
+                    fprintf(stderr, "gcc failed with exited code %d\n", exit_code);
+                    continue;
+                }
+            }
         }
         else{
             perror("fork");
