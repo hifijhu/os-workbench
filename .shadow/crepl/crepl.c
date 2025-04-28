@@ -35,9 +35,10 @@ int main(int argc, char *argv[]) {
         if(strncmp(cond, line, strlen(cond)) == 0){
             int i = 0;
             int j = strlen(cond);
-            while(i < 256 && line[j] != '('){
+            while(i < 255 && line[j] != '('){
                 func_name[i++] = line[j++];
             }
+            func_name[i] = '\0';
             strncpy(routine, line, sizeof(routine));
         }
         else{
