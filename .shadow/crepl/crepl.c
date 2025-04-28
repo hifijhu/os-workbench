@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <dlfcn.h>
 #include <wait.h>
 int main(int argc, char *argv[]) {
     static char line[4096];
@@ -23,6 +24,8 @@ int main(int argc, char *argv[]) {
             close(fd);
             return 1;
         }
+        char* mid = malloc(sizeof(char) * 6);
+        strncpy(mid, temp+4, 6);
 
         size_t len_line = strlen(line);
         char *p_line = (char *)malloc(len_line+1);
@@ -30,14 +33,13 @@ int main(int argc, char *argv[]) {
         p_line[len_line] = '\0';
 
         char routine[256];
-        snprintf(routine, sizeof(routine), "int expr_wrapper%d(){return %s;}", count, p_line);
+        snprintf(routine, sizeof(routine), "int %s(){return %s;}", mid, p_line);
         write(fd, routine, strlen(routine));
 
         char new_name[256];
         char lib_name[256];
 
-        char* mid = malloc(sizeof(char) * 6);
-        strncpy(mid, temp+4, 6);
+
         snprintf(lib_name, sizeof(lib_name), "tmp/lib%s.so", mid);
         snprintf(new_name, sizeof(new_name), "%s.c", temp);
 
@@ -72,7 +74,29 @@ int main(int argc, char *argv[]) {
             perror("fork");
             return 1;
         }
+        
+        void *handle;
+        void (*excu)(void);
+        char *error;
 
+        handle = dlopen(lib_name, RTLD_LAZY);
+        if(!handle){
+            perror("handle");
+            return 1;
+        }
+
+        dlerror();
+
+        *(void **) (&excu) = dlsym(handle, mid);
+        if((error = dlerror()) != NULL){
+            perror("dlsym");
+            dlclose(handle);
+            return 1;
+        }
+
+        excu();
+
+        dlclose(handle);
 
         /*
         if (pipe(pipe_fd) < 0){
