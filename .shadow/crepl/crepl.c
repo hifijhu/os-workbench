@@ -36,7 +36,9 @@ int main(int argc, char *argv[]) {
             int i = 0;
             int j = strlen(cond);
             while(i < 255 && line[j] != '('){
-                func_name[i++] = line[j++];
+                func_name[i] = line[j];
+                i++;
+                j++;
             }
             func_name[i] = '\0';
             strncpy(routine, line, sizeof(routine));
