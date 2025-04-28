@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
         char func_name[256];
         if(strncmp(cond, line, strlen(cond)) == 0){
             int i = 0;
-            int j = 4;
+            int j = strlen(cond);
             while(i < 256 && line[j] != '('){
                 func_name[i++] = line[j++];
             }
