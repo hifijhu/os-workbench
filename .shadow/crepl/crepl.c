@@ -25,9 +25,13 @@ int main(int argc, char *argv[]) {
             return 1;
         }
 
-        char* func_name = malloc(sizeof(char) * (strlen(expr) + 2));
-        snprintf(func_name + strlen(expr), 1, "%d", count);
-        func_name[strlen(expr)+1] = '\0';
+        char func_name[256];
+        snprintf(func_name, sizeof(func_name), "expr_wrapper%d", count);
+        
+        size_t len_func_name = strlen(func_name);
+        char* p_func_name = (char*) malloc(len_func_name+1);
+        strncpy(p_func_name, func_name, len_func_name);
+        p_func_name[len_func_name] = '\0';
 
         size_t len_line = strlen(line);
         char *p_line = (char *)malloc(len_line+1);
@@ -35,7 +39,7 @@ int main(int argc, char *argv[]) {
         p_line[len_line] = '\0';
 
         char routine[256];
-        snprintf(routine, sizeof(routine), "int %s(){return %s;}", func_name, p_line);
+        snprintf(routine, sizeof(routine), "int %s(){return %s;}", p_func_name, p_line);
         write(fd, routine, strlen(routine));
 
 
@@ -43,7 +47,7 @@ int main(int argc, char *argv[]) {
         char lib_name[256];
 
 
-        snprintf(lib_name, sizeof(lib_name), "tmp/lib%s.so", func_name);
+        snprintf(lib_name, sizeof(lib_name), "tmp/lib%s.so", p_func_name);
         snprintf(new_name, sizeof(new_name), "%s.c", temp);
 
         size_t len_new_name = strlen(new_name);
@@ -90,7 +94,7 @@ int main(int argc, char *argv[]) {
 
         dlerror();
 
-        *(void **) (&excu) = dlsym(handle, func_name);
+        *(void **) (&excu) = dlsym(handle, p_func_name);
         if((error = dlerror()) != NULL){
             perror("dlsym");
             dlclose(handle);
