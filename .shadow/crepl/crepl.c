@@ -113,14 +113,14 @@ int main(int argc, char *argv[]) {
         int (*excu)(void);
         char *error;
 
-        handle = dlopen(p_lib_name, RTLD_LAZY | RTLD_GLOBAL);
+        handle = dlopen(p_lib_name, RTLD_LAZY | RTLD_GLOBAL);printf("mark1\n");
         if(!handle){
             perror("handle");
             return 1;
         }
 
         dlerror();
-        printf("mark1\n");
+        
         if (flag == 1){
             printf("function %s has loaded.\n", p_func_name);
         }
