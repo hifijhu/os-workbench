@@ -23,8 +23,8 @@ int main(int argc, char *argv[]) {
             close(fd);
             return 1;
         }
-        char* pre = "#include <unistd.h>\nint main(){ int result = ";
-        char* aft = ";\nchar res[64] = (char)result;\nwrite(STDOUT_FILENO, res, sizeof(res));}";
+        char* pre = "#include <stdio.h>\nint main(){ int result = ";
+        char* aft = ";\nprintf(\"%%d\",result);}";
         write(fd, pre, strlen(pre));
         write(fd, line , strlen(line));
         write(fd, aft, strlen(aft));
