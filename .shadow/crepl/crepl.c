@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
     static char line[4096];
     int count = 0;
     const char* expr = "expr_wrapper";
-    const char* cond = "int";
+    const char* cond = "int ";
     while (1) {
         printf("crepl> ");
         fflush(stdout);
