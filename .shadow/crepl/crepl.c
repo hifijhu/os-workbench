@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
             perror("fork");
             return 1;
         }
-        printf("mark1\n");
+        
         void *handle;
         int (*excu)(void);
         char *error;
@@ -120,7 +120,7 @@ int main(int argc, char *argv[]) {
         }
 
         dlerror();
-        
+        printf("mark1\n");
         if (flag == 1){
             printf("function %s has loaded.\n", p_func_name);
         }
