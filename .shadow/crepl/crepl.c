@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
         }
         
         // To be implemented.
-        //int pipe_fd[2];
+        int pipe_fd[2];
         char temp[128] = "tmp/XXXXXX";
         int fd = mkstemp(temp);
         if (fd == -1){
@@ -31,9 +31,11 @@ int main(int argc, char *argv[]) {
 
         char new_name[256];
         char exec_name[256];
+        //char txt_name[256];
         snprintf(exec_name, sizeof(exec_name), "%s", temp);
         snprintf(new_name, sizeof(new_name), "%s.c", temp);
-        
+        //snprintf(txt_name, sizeof(txt_name), "%s.txt", temp);
+
         size_t len_new_name = strlen(new_name);
         char *p_new_name = (char *)malloc(len_new_name+1);
         strncpy(p_new_name, new_name, len_new_name);
@@ -51,15 +53,12 @@ int main(int argc, char *argv[]) {
         }
 
         close(fd);
-        
-        /*if (pipe(pipe_fd) < 0){
-            perror("pipe");
-            return 1;
-        }*/
 
         int pid = fork();
         if (pid == 0){
             execlp("gcc","gcc",  p_new_name, "-o", p_exec_name, NULL);
+            perror("execlp");
+            return 1;
         } else if (pid > 0){
             int status;
             waitpid(pid, &status, 0);
@@ -68,21 +67,35 @@ int main(int argc, char *argv[]) {
             perror("fork");
             return 1;
         }
+
+        if (pipe(pipe_fd) < 0){
+            perror("pipe");
+            return 1;
+        }
         
         int ppid = fork();
         if (ppid == 0){
+            close(pipe_fd[0]);
+            dup2(pipe_fd[1], STDOUT_FILENO);
+            close(pipe_fd[1]);
             char* const pargv[] = {NULL};
             execv(p_exec_name, pargv);
 
         } else if (ppid > 0){
+            close(pipe_fd[1]);
             char buffer[128];
             int sstatus;
-            waitpid(ppid, &sstatus, 0);
-            if (WIFEXITED(sstatus)){
-                int exit_code = WEXITSTATUS(sstatus);
-                printf("%d\n", exit_code);
+            waitpid(ppid, &sstatus, 0); 
+
+            ssize_t n = read(pipe_fd[0], buffer, sizeof(buffer)-1);
+            if(n > 0){
+                buffer[n] = '\0';
+                printf("= %s\n", buffer);
+            } else {
+                printf("no receive\n");
             }
- 
+
+            close(pipe_fd[0]);
         } else {
             perror("ppid");
             return 1;
