@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
             
             snprintf(routine, sizeof(routine), "int expr_wrapper%d(){return %s;}", count, p_line);
         }
-        
+        printf("mark1");
         size_t len_func_name = strlen(func_name);
         char* p_func_name = (char*) malloc(len_func_name+1);
         strncpy(p_func_name, func_name, len_func_name);
@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
         }
 
         close(fd);
-printf("mark1");
+
         int pid = fork();
         if (pid == 0){
             
