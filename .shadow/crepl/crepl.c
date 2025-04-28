@@ -118,9 +118,9 @@ int main(int argc, char *argv[]) {
             perror("handle");
             return 1;
         }
-
+        printf("mark0");
         dlerror();
-
+        printf("mark1");
         if (flag == 1){
             printf("function %s has loaded.\n", p_func_name);
         }
@@ -131,7 +131,7 @@ int main(int argc, char *argv[]) {
                 dlclose(handle);
                 return 1;
             }
-
+            
         printf("= %d\n", excu());
 
         }
