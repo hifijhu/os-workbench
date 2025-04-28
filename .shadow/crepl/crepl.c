@@ -125,7 +125,7 @@ int main(int argc, char *argv[]) {
 
         }
         
-        //dlclose(handle);
+        dlclose(handle);
 
         count++;
         flag = 0;
