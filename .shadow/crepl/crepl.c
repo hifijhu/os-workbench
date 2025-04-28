@@ -8,6 +8,7 @@ int main(int argc, char *argv[]) {
     static char line[4096];
     int count = 0;
     const char* expr = "expr_wrapper";
+    const char* cond = "int";
     while (1) {
         printf("crepl> ");
         fflush(stdout);
@@ -16,6 +17,10 @@ int main(int argc, char *argv[]) {
             break;
         }
         
+        size_t len_line = strlen(line);
+        char *p_line = (char *)malloc(len_line+1);
+        strncpy(p_line, line, len_line);
+        p_line[len_line] = '\0';
 
         char temp[128] = "tmp/XXXXXX";
         int fd = mkstemp(temp);
@@ -25,21 +30,29 @@ int main(int argc, char *argv[]) {
             return 1;
         }
 
+        char routine[256];
         char func_name[256];
-        snprintf(func_name, sizeof(func_name), "expr_wrapper%d", count);
+        if(strncmp(cond, line, sizeof(cond)) == 0){
+            int i = 0;
+            int j = 4;
+            while(i < 256 && line[j] != '('){
+                func_name[i++] = line[j++];
+            }
+            strncpy(routine, line, sizeof(routine));
+        }
+        else{
+            snprintf(func_name, sizeof(func_name), "expr_wrapper%d", count);
+            
+
+            snprintf(routine, sizeof(routine), "int expr_wrapper%d(){return %s;}", count, p_line);
+        
+        }
         
         size_t len_func_name = strlen(func_name);
         char* p_func_name = (char*) malloc(len_func_name+1);
         strncpy(p_func_name, func_name, len_func_name);
         p_func_name[len_func_name] = '\0';
 
-        size_t len_line = strlen(line);
-        char *p_line = (char *)malloc(len_line+1);
-        strncpy(p_line, line, len_line);
-        p_line[len_line] = '\0';
-
-        char routine[256];
-        snprintf(routine, sizeof(routine), "int %s(){return %s;}", p_func_name, p_line);
         write(fd, routine, strlen(routine));
 
 
