@@ -144,7 +144,7 @@ void disk_scan(u32 clusId, struct dnode* head){
         struct fat32dent* dent = (struct fat32dent *) cluster_to_sec(clusId);
         struct bmphdr* bmp = (struct bmphdr *)cluster_to_sec(clusId);
         struct lfn* lfn = (struct lfn*)cluster_to_sec(clusId);
-        if (strncmp(dent->DIR_Name[8], "BMP", 3) == 0 || dent->DIR_Name[0] == 0x2e || (lfn->LDIR_Attr == 0x0F && lfn->LDIR_FstClusLO == 0x00 && lfn->LDIR_Type == 0x00)){
+        if (strncmp((char *)&dent->DIR_Name[8], "BMP", 3) == 0 || dent->DIR_Name[0] == 0x2e || (lfn->LDIR_Attr == 0x0F && lfn->LDIR_FstClusLO == 0x00 && lfn->LDIR_Type == 0x00)){
             clus_class[clusId] = CLUS_DIR;
             struct dnode node = {.clusId = clusId, .next = NULL};
             p->next = &node;
