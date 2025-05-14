@@ -9,14 +9,14 @@
 #include "fat32.h"
 
 size_t clus_sz;
+int clus_max;
 struct fat32hdr *hdr;
-int clus_class[MAX_CLUS];
 struct dnode head;
 
 void *mmap_disk(const char *fname);
-void disk_scan(u32 clusId, struct dnode* head);
+void disk_scan(u32 clusId, struct dnode* head, int* clus_class);
 
-void dir_traversal(struct dnode* head);
+void dir_traversal(struct dnode* head, int* clus_class);
 
 int main(int argc, char *argv[]) {
     if (argc < 2) {
@@ -34,11 +34,13 @@ int main(int argc, char *argv[]) {
     // Map disk image to memory.
     // The file system is a in-memory data structure now.
     hdr = mmap_disk(argv[1]);
-
+    int rootDirSectors = ((hdr->BPB_RootEntCnt * 32) + (hdr->BPB_BytsPerSec-1)) / hdr->BPB_BytsPerSec;
+    clus_max = (hdr->BPB_TotSec32 - hdr->BPB_RsvdSecCnt - hdr->BPB_NumFATs * hdr->BPB_FATSz32 - rootDirSectors) / hdr->BPB_SecPerClus;
     clus_sz = hdr->BPB_BytsPerSec * hdr->BPB_SecPerClus;
     // File system traversal.
-    disk_scan(hdr->BPB_RootClus, &head);
-    dir_traversal(&head);
+    int clus_class[clus_max+2];
+    disk_scan(hdr->BPB_RootClus, &head, clus_class);
+    dir_traversal(&head, clus_class);
 
     munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
 }
@@ -138,7 +140,7 @@ void get_filename(struct fat32dent *dent, char *buf, char* lbuf) {
     }
 }
 
-void disk_scan(u32 clusId, struct dnode* head){
+void disk_scan(u32 clusId, struct dnode* head, int* clus_class){
     struct dnode* p = head;
     while (clusId < CLUS_INVALID && clusId < 100000) {
         struct fat32dent* dent = (struct fat32dent *) cluster_to_sec(clusId);
@@ -167,7 +169,7 @@ void disk_scan(u32 clusId, struct dnode* head){
     free(p);
 }
 
-int recoverpic(u32 clusId, char* path){
+int recoverpic(u32 clusId, char* path, int *clus_class){
     if(clus_class[clusId] != CLUS_BMPHDR) return -1;
     struct bmphdr* bmp = (struct bmphdr*)cluster_to_sec(clusId);
     size_t bmp_size = bmp->file_size;
@@ -188,7 +190,7 @@ int recoverpic(u32 clusId, char* path){
     return 0;
 }
 
-void dir_traversal(struct dnode* head){
+void dir_traversal(struct dnode* head, int * clus_class){
     int ndents = clus_sz / sizeof(struct fat32dent);
     struct dnode* p = head->next;
     while (p != NULL){
@@ -210,7 +212,7 @@ void dir_traversal(struct dnode* head){
             snprintf(order, sizeof(order), "sha1sum /tmp/%s", lname);
             u32 dataClus = dent->DIR_FstClusLO | (dent->DIR_FstClusHI << 16);
            
-            if(recoverpic(dataClus, order) < 0) {
+            if(recoverpic(dataClus, order, clus_class) < 0) {
                 continue;
             }
             char checksum[128];
