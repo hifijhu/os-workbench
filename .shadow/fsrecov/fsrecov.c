@@ -166,7 +166,6 @@ void disk_scan(u32 clusId, struct dnode* head, int* clus_class){
             clusId++;
         }
     }
-    free((void *)p);
 }
 
 int recoverpic(u32 clusId, char* path, int *clus_class){
@@ -228,7 +227,5 @@ void dir_traversal(struct dnode* head, int * clus_class){
         }
         p = p->next;
     }
-
-    free(p);
 }
 
