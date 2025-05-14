@@ -150,7 +150,7 @@ void disk_scan(u32 clusId, struct dnode* head){
             p->next = &node;
             p = p->next;
             clusId++;
-        } else if (memcmp(&(bmp->magic_num), "\x42\x4D", 2) == 0){
+        } else if (memcmp(&(bmp->magic_num), "\x42\x4D", 2) == 0 && bmp->reversed == 0x00000000){
             clus_class[clusId] = CLUS_BMPHDR;
             clusId++;
             int bmp_size = bmp->file_size - clus_sz;
