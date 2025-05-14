@@ -5,6 +5,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/mman.h>
+
 #include "fat32.h"
 
 size_t clus_sz;
@@ -38,7 +39,7 @@ int main(int argc, char *argv[]) {
     // File system traversal.
     disk_scan(hdr->BPB_RootClus, &head);
     dir_traversal(&head);
-    
+
     munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
 }
 
@@ -108,7 +109,7 @@ void get_filename(struct fat32dent *dent, char *buf, char* lbuf) {
     int llen = 0;
     struct lfn *p = (struct lfn *)(dent - 1);
     if (p->LDIR_Attr == 0x0F){
-        while(! p->LDIR_Ord & LAST_LONG_MASK){
+        while(~ p->LDIR_Ord & LAST_LONG_MASK){
             for (int i = 0; i < sizeof(p->LDIR_Name1); i+=2){
                 lbuf[llen++] = p->LDIR_Name1[i]; 
             }
@@ -143,7 +144,7 @@ void disk_scan(u32 clusId, struct dnode* head){
         struct fat32dent* dent = (struct fat32dent *) cluster_to_sec(clusId);
         struct bmphdr* bmp = (struct bmphdr *)cluster_to_sec(clusId);
         struct lfn* lfn = (struct lfn*)cluster_to_sec(clusId);
-        if (strncmp(dent->DIR_Name[8], "BMP", 3) == 0 || strncmp(dent->DIR_Name[0], ".", 1) == 0 || (lfn->LDIR_Attr == 0x0F && lfn->LDIR_FstClusLO == 0 && lfn->LDIR_Type == 0)){
+        if (strncmp(dent->DIR_Name[8], "BMP", 3) == 0 || dent->DIR_Name[0] == 0x2e || (lfn->LDIR_Attr == 0x0F && lfn->LDIR_FstClusLO == 0x00 && lfn->LDIR_Type == 0x00)){
             clus_class[clusId] = CLUS_DIR;
             struct dnode node = {.clusId = clusId, .next = NULL};
             p->next = &node;
@@ -177,12 +178,12 @@ int recoverpic(u32 clusId, char* path){
     void* p = cluster_to_sec(clusId);
     while(bmp_size > clus_sz){
         if(clus_class[clus_sz] != CLUS_BMPHDR || clus_class[clus_sz] != CLUS_BMP) return -1;
-        write(fd, p, clus_sz);
+        fwrite(p, clus_sz, 1, fd);
         clusId++;
         bmp_size -= clus_sz;
         p = cluster_to_sec(clusId);
     }
-    write(fd, p, bmp_size);
+    fwrite(p, bmp_size, 1, fd);
     fclose(fd);
     return 0;
 }
@@ -205,7 +206,7 @@ void dir_traversal(struct dnode* head){
             char lname[256];
             get_filename(dent, fname, lname);
             
-            char order[256];
+            char order[288];
             snprintf(order, sizeof(order), "sha1sum /tmp/%s", lname);
             u32 dataClus = dent->DIR_FstClusLO | (dent->DIR_FstClusHI << 16);
            
@@ -214,14 +215,14 @@ void dir_traversal(struct dnode* head){
             }
             char checksum[128];
             FILE * fp = popen(order, "r");
-            panic_on(fp < 0, "popen");
+            assert(fp >= 0);
             fscanf(fp, "%s", checksum); // Get it!
             pclose(fp);
             
-            char result[256];
-            snprintf(result, "%s  %s\n", checksum, lname);
+            char result[512];
+            snprintf(result, sizeof(result), "%s  %s\n", checksum, lname);
             FILE * fd = fopen("record.txt", "w");
-            write(fd, result, sizeof(result));
+            fwrite(result, sizeof(result), 1, fd);
         }
         p = p->next;
     }
