@@ -106,7 +106,8 @@ void get_filename(struct fat32dent *dent, char *buf) {
 
 void dfs_scan(u32 clusId, int depth, int is_dir) {
     // RTFM: Sec 6
-
+    int cnt = 0;
+    int flag = -1;
     for (; clusId < CLUS_INVALID; clusId = next_cluster(clusId)) {
 
         if (is_dir) {
@@ -138,14 +139,7 @@ void dfs_scan(u32 clusId, int depth, int is_dir) {
                 }
             }
         } else {
-            struct bmphdr *bmp = (struct bmphdr *)cluster_to_sec(clusId);
-
-            if(memcmp(&(bmp->magic_num), "\x42\x4D", 2) == 0){
-                printf("size:%d, width:%d, height:%d\n", bmp->file_size, bmp->width, bmp->height);
-            } else {
-                continue;
-                //printf("#%d ", clusId);
-            }
+            printf("#%d ", clusId);
         }
     }
 }

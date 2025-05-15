@@ -160,14 +160,6 @@ void disk_scan(u32 clusId, struct dnode* head, int* clus_class){
         } else if (memcmp(&(bmp->magic_num), "\x42\x4D", 2) == 0 && bmp->reversed == 0x00000000){
             clus_class[clusId] = CLUS_BMPHDR;
             clusId++;
-            int bmp_size = bmp->file_size - clus_sz;
-            while (bmp_size > clus_sz && clusId < clus_max){
-                clus_class[clusId] = CLUS_BMP;
-                bmp_size -= clus_sz;
-                clusId++;
-            }
-            clus_class[clusId] = CLUS_BMP;
-            clusId++;
         } else {
             clus_class[clusId] = CLUS_FREE;
             clusId++;
@@ -179,9 +171,6 @@ int recoverpic(u32 clusId, char* path, int *clus_class){
     if(clus_class[clusId] != CLUS_BMPHDR) return -1;
     struct bmphdr* bmp = (struct bmphdr*)cluster_to_sec(clusId);
     size_t bmp_size = bmp->file_size;
-    size_t height = bmp->height;
-    size_t width = bmp->width;
-    size_t offset = bmp->offset;
     FILE * fd = fopen(path, "w");
     if (fd == NULL) {
         perror("Failed to open file");
@@ -190,11 +179,6 @@ int recoverpic(u32 clusId, char* path, int *clus_class){
     }
     void* p = cluster_to_sec(clusId);
     while(bmp_size > clus_sz){
-        if((clus_class[clusId] != CLUS_BMPHDR) && (clus_class[clusId] != CLUS_BMP)) {
-            fclose(fd);
-            //perror("wrong class");
-            return -1;
-        }
         if (fwrite(p, clus_sz, 1, fd) != 1) {
             perror("Failed to write to file");
             fclose(fd);
@@ -241,6 +225,12 @@ void dir_traversal(struct dnode* head, int * clus_class){
             u32 dataClus = dent->DIR_FstClusLO | (dent->DIR_FstClusHI << 16);
            
             if(recoverpic(dataClus, path, clus_class) < 0) {
+                lname[strlen(lname)] = '\n';
+                if (fwrite(lname, strlen(lname), 1, fd) != 1) {
+                    perror("Failed to write to file");
+                    fclose(fd);
+                    exit(EXIT_FAILURE);
+                }
                 continue;
             }
             char checksum[256];
@@ -251,9 +241,10 @@ void dir_traversal(struct dnode* head, int * clus_class){
                 exit(EXIT_FAILURE);
             }
             if (fgets(checksum, sizeof(checksum), fp) == NULL) {
-                perror("fgets failed");
-                pclose(fp);
-                exit(EXIT_FAILURE);
+                printf("fgets failed\n");
+                //perror("fgets failed");
+                //pclose(fp);
+                //exit(EXIT_FAILURE);
             }
             pclose(fp);
             
