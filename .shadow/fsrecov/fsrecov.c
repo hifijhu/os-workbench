@@ -240,7 +240,7 @@ void dir_traversal(struct dnode* head, int * clus_class){
                 continue;
             }
             char checksum[256];
-            printf("Order: %s\n", order);
+            printf("PATH: %s\n", getenv("PATH"));
             FILE *fp = popen(order, "r");
             if (fp == NULL) {
                 perror("popen failed");
@@ -257,7 +257,7 @@ void dir_traversal(struct dnode* head, int * clus_class){
             if (fwrite(checksum, sizeof(checksum), 1, fd) != 1) {
                 perror("Failed to write to file");
                 fclose(fd);
-                return -1;
+                exit(EXIT_FAILURE);
             }
             fclose(fd);
         }
