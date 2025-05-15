@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
     disk_scan(hdr->BPB_RootClus, &head, clus_class);
     dir_traversal(&head, clus_class);
 
-    munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
+    munmap(hdr, 131072 *512);
 }
 
 
