@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
     dir_traversal(&head, clus_class);
 
     munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
-}
+
 
 
 void *mmap_disk(const char *fname) {
@@ -213,11 +213,13 @@ void dir_traversal(struct dnode* head, int * clus_class){
             char lname[256];
             get_filename(dent, fname, lname);
             
+            char path[266];
+            snprintf(path, sizeof(path), "/tmp/%s", lname);
             char order[288];
-            snprintf(order, sizeof(order), "sha1sum /tmp/%s", lname);
+            snprintf(order, sizeof(order), "sha1sum %s", path);
             u32 dataClus = dent->DIR_FstClusLO | (dent->DIR_FstClusHI << 16);
            
-            if(recoverpic(dataClus, order, clus_class) < 0) {
+            if(recoverpic(dataClus, path, clus_class) < 0) {
                 continue;
             }
             char checksum[128];
