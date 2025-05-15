@@ -148,8 +148,14 @@ void disk_scan(u32 clusId, struct dnode* head, int* clus_class){
         struct lfn* lfn = (struct lfn*)cluster_to_sec(clusId);
         if (strncmp((char *)&dent->DIR_Name[8], "BMP", 3) == 0 || strncmp((char *)&dent->DIR_Name, ".   ", 4) == 0 || strncmp((char *)&dent->DIR_Name, "..  ", 4) == 0 || (lfn->LDIR_Attr == 0x0F && lfn->LDIR_FstClusLO == 0x00 && lfn->LDIR_Type == 0x00)){
             clus_class[clusId] = CLUS_DIR;
-            struct dnode node = {.clusId = clusId, .next = NULL};
-            p->next = &node;
+            struct dnode *node = (struct dnode*)malloc(sizeof(struct dnode));
+            if(node == NULL){
+                perror("malloc");
+                exit(EXIT_FAILURE);
+            }
+            node->next = NULL;
+            node->clusId = clusId;
+            p->next = node;
             p = p->next;
             clusId++;
         } else if (memcmp(&(bmp->magic_num), "\x42\x4D", 2) == 0 && bmp->reversed == 0x00000000){
