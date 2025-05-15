@@ -241,7 +241,7 @@ void dir_traversal(struct dnode* head, int * clus_class){
             }
             char checksum[256];
             
-            FILE *fp = popen(order, "r");
+            FILE *fp = popen("/usr/bin/sha1sum tmp/35OZL3hvJnEf.bmp", "r");
             if (fp == NULL) {
                 perror("popen failed");
                 exit(EXIT_FAILURE);
