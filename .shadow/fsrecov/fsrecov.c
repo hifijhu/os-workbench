@@ -202,7 +202,7 @@ int recoverpic(u32 clusId, char* path, int *clus_class){
     while(bmp_size > clus_sz){
         if((clus_class[clusId] != CLUS_BMPHDR) && (clus_class[clusId] != CLUS_BMP)) {
             fclose(fd);
-            perror("wrong class");
+            //perror("wrong class");
             return -1;
         }
         if (fwrite(p, clus_sz, 1, fd) != 1) {
