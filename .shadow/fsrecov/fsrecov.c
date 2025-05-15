@@ -241,6 +241,11 @@ void dir_traversal(struct dnode* head, int * clus_class){
             u32 dataClus = dent->DIR_FstClusLO | (dent->DIR_FstClusHI << 16);
            
             if(recoverpic(dataClus, path, clus_class) < 0) {
+                if (fwrite(lname, strlen(lname), 1, fd) != 1) {
+                    perror("Failed to write to file");
+                    fclose(fd);
+                    exit(EXIT_FAILURE);
+                }
                 continue;
             }
             char checksum[256];
