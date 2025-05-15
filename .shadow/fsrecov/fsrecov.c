@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
     dir_traversal(&head, clus_class);
 
     munmap(hdr, hdr->BPB_TotSec32 * hdr->BPB_BytsPerSec);
-
+}
 
 
 void *mmap_disk(const char *fname) {
