@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include <errno.h>
+#include <sys/wait.h>
 #include "fat32.h"
 
 size_t clus_sz;
