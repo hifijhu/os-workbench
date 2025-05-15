@@ -4,6 +4,8 @@ typedef uint8_t u8;
 typedef uint16_t u16;
 typedef uint32_t u32;
 
+// Copied from the manual
+
 struct fat32hdr {
     u8  BS_jmpBoot[3];
     u8  BS_OEMName[8];
@@ -86,19 +88,5 @@ struct lfn{
     u8 LDIR_Chksum;
     u8 LDIR_Name2[12];
     u16 LDIR_FstClusLO;
-    u8 LDIR_Name3[4];
+    u32 LDIR_Name3;
 }__attribute__((packed));
-
-#define LAST_LONG_MASK 0x40
-#define ATTR_LONG_NAME ATTR_READ_ONLY | ATTR_HIDDEN | ATTR_SYSTEM | ATTR_VOLUME_ID
-
-
-#define CLUS_DIR 0
-#define CLUS_BMPHDR 1
-#define CLUS_BMP 2
-#define CLUS_FREE 3
-
-struct dnode{
-    u32 clusId;
-    struct dnode* next;
-};
