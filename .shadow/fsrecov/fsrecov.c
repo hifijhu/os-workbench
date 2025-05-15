@@ -251,9 +251,8 @@ void dir_traversal(struct dnode* head, int * clus_class){
                 continue;
             }
             char checksum[256];
-            extern char **environ;
             
-            FILE *fp = popen("echo Hello World", "r");
+            FILE *fp = popen(order, "r");
             if (fp == NULL) {
                 perror("popen err");
                 exit(EXIT_FAILURE);
