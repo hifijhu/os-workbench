@@ -27,7 +27,9 @@ int main(int argc, char *argv[]) {
     
     assert(sizeof(struct fat32hdr) == 512);
     assert(sizeof(struct fat32dent) == 32);
-
+    for (char **env = environ; *env != NULL; env++) {
+        printf("%s\n", *env);
+    }
     head.clusId = -1;
     head.next = NULL;
     // Map disk image to memory.
@@ -242,9 +244,7 @@ void dir_traversal(struct dnode* head, int * clus_class){
             }
             char checksum[256];
             extern char **environ;
-            for (char **env = environ; *env != NULL; env++) {
-                printf("%s\n", *env);
-            }
+            
             FILE *fp = popen("echo Hello World", "r");
             if (fp == NULL) {
                 perror("popen err");
