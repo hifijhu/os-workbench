@@ -184,7 +184,7 @@ int recoverpic(u32 clusId, char* path, int *clus_class){
     FILE * fd = fopen(path, "w");
     void* p = cluster_to_sec(clusId);
     while(bmp_size > clus_sz){
-        if(clus_class[clusId] != CLUS_BMPHDR && clus_class[clusId] != CLUS_BMP) return -1;
+        if(clus_class[clusId] != CLUS_BMPHDR || clus_class[clusId] != CLUS_BMP) return -1;
         fwrite(p, clus_sz, 1, fd);
         clusId++;
         bmp_size -= clus_sz;
