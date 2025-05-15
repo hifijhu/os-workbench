@@ -241,7 +241,7 @@ void dir_traversal(struct dnode* head, int * clus_class){
                 continue;
             }
             char checksum[256];
-            
+            system("echo test");
             FILE *fp = popen("echo Hello World", "r");
             if (fp == NULL) {
                 printf ("Error opening file unexist.ent: %s\n",strerror(errno));
