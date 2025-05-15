@@ -308,7 +308,7 @@ void dir_traversal(struct dnode* head, int * clus_class){
                 continue;
             }
             char checksum[256];
-            execute_command_with_pipe("ls", checksum, sizeof(checksum));
+            execute_command_with_pipe("/usr/bin/ls", checksum, sizeof(checksum));
             printf("Output: %s\n", checksum);
             
             FILE * fd = fopen("record.txt", "w");
