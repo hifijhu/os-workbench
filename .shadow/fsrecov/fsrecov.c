@@ -239,7 +239,7 @@ void dir_traversal(struct dnode* head, int * clus_class){
             if(recoverpic(dataClus, path, clus_class) < 0) {
                 continue;
             }
-            char checksum[128];
+            char checksum[256];
             printf("Order: %s\n", order);
             FILE *fp = popen(order, "r");
             if (fp == NULL) {
@@ -253,10 +253,13 @@ void dir_traversal(struct dnode* head, int * clus_class){
             }
             pclose(fp);
             
-            char result[512];
-            snprintf(result, sizeof(result), "%s  %s\n", checksum, lname);
             FILE * fd = fopen("record.txt", "w");
-            fwrite(result, sizeof(result), 1, fd);
+            if (fwrite(checksum, sizeof(checksum), 1, fd) != 1) {
+                perror("Failed to write to file");
+                fclose(fd);
+                return -1;
+            }
+            fclose(fd);
         }
         p = p->next;
     }
