@@ -240,6 +240,14 @@ void dir_traversal(struct dnode* head, int * clus_class){
                 continue;
             }
             char checksum[128];
+
+            if (access(path, F_OK) != 0) {
+                perror("File does not exist");
+            }
+            if (access(path, R_OK) != 0) {
+                perror("File is not readable");
+            }
+            
             FILE *fp = popen(order, "r");
             if (fp == NULL) {
                 perror("popen failed");
