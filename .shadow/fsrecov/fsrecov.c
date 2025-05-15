@@ -23,7 +23,6 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "Usage: %s fs-image\n", argv[0]);
         exit(1);
     }
-    printf("PATH: %s\n", getenv("PATH"));
     setbuf(stdout, NULL);
 
     assert(sizeof(struct fat32hdr) == 512);
