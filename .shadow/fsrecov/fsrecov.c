@@ -240,9 +240,16 @@ void dir_traversal(struct dnode* head, int * clus_class){
                 continue;
             }
             char checksum[128];
-            FILE * fp = popen(order, "r");
-            assert(fp >= 0);
-            fscanf(fp, "%s", checksum); // Get it!
+            FILE *fp = popen(order, "r");
+            if (fp == NULL) {
+                perror("popen failed");
+                return -1;
+            }
+            if (fgets(checksum, sizeof(checksum), fp) == NULL) {
+                perror("fgets failed");
+                pclose(fp);
+                return -1;
+            }
             pclose(fp);
             
             char result[512];
