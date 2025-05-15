@@ -264,7 +264,7 @@ void dir_traversal(struct dnode* head, int * clus_class){
             }
             pclose(fp);
             
-            FILE * fd = fopen("record.txt", "w");
+            FILE * fd = fopen("record.txt", "a");
             if (fwrite(checksum, sizeof(checksum), 1, fd) != 1) {
                 perror("Failed to write to file");
                 fclose(fd);
