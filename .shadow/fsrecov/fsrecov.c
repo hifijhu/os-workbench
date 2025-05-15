@@ -243,12 +243,12 @@ void dir_traversal(struct dnode* head, int * clus_class){
             FILE *fp = popen(order, "r");
             if (fp == NULL) {
                 perror("popen failed");
-                return -1;
+                exit(EXIT_FAILURE);
             }
             if (fgets(checksum, sizeof(checksum), fp) == NULL) {
                 perror("fgets failed");
                 pclose(fp);
-                return -1;
+                exit(EXIT_FAILURE);
             }
             pclose(fp);
             
