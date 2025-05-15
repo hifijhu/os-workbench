@@ -241,7 +241,10 @@ void dir_traversal(struct dnode* head, int * clus_class){
                 continue;
             }
             char checksum[256];
-            
+            extern char **environ;
+            for (char **env = environ; *env != NULL; env++) {
+                printf("%s\n", *env);
+            }
             FILE *fp = popen("echo Hello World", "r");
             if (fp == NULL) {
                 perror("popen err");
