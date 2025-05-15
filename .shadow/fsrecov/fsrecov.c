@@ -231,7 +231,7 @@ void dir_traversal(struct dnode* head, int * clus_class){
             get_filename(dent, fname, lname);
             
             char path[266];
-            snprintf(path, sizeof(path), "/tmp/%s", lname);
+            snprintf(path, sizeof(path), "tmp/%s", lname);
             char order[288];
             snprintf(order, sizeof(order), "sha1sum %s", path);
             u32 dataClus = dent->DIR_FstClusLO | (dent->DIR_FstClusHI << 16);
