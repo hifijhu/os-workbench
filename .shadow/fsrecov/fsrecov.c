@@ -5,7 +5,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/mman.h>
-
+#include <errno.h>
 #include "fat32.h"
 
 size_t clus_sz;
@@ -242,7 +242,7 @@ void dir_traversal(struct dnode* head, int * clus_class){
             
             FILE *fp = popen("echo Hello World", "r");
             if (fp == NULL) {
-                perror("popen failed");
+                printf ("Error opening file unexist.ent: %s\n",strerror(errno));
                 exit(EXIT_FAILURE);
             }
             if (fgets(checksum, sizeof(checksum), fp) == NULL) {
