@@ -240,7 +240,7 @@ void dir_traversal(struct dnode* head, int * clus_class){
                 continue;
             }
             char checksum[256];
-            printf("PATH: %s\n", getenv("PATH"));
+            
             FILE *fp = popen(order, "r");
             if (fp == NULL) {
                 perror("popen failed");
