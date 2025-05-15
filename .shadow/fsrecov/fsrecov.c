@@ -218,6 +218,7 @@ int recoverpic(u32 clusId, char* path, int *clus_class){
 void dir_traversal(struct dnode* head, int * clus_class){
     int ndents = clus_sz / sizeof(struct fat32dent);
     struct dnode* p = head->next;
+    FILE * fd = fopen("record.txt", "w");
     while (p != NULL){
         u32 clusId = p->clusId;
         assert(clus_class[clusId] == CLUS_DIR);
@@ -256,15 +257,16 @@ void dir_traversal(struct dnode* head, int * clus_class){
             }
             pclose(fp);
             
-            FILE * fd = fopen("record.txt", "a");
+            
             if (fwrite(checksum, sizeof(checksum), 1, fd) != 1) {
                 perror("Failed to write to file");
                 fclose(fd);
                 exit(EXIT_FAILURE);
             }
-            fclose(fd);
+            
         }
         p = p->next;
     }
+    fclose(fd);
 }
 
