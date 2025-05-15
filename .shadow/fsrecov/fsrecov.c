@@ -28,7 +28,15 @@ int main(int argc, char *argv[]) {
     assert(sizeof(struct fat32hdr) == 512);
     assert(sizeof(struct fat32dent) == 32);
 
-    
+    extern char **environ;
+    static char *env_backup[1024];
+    int i = 0;
+    while (environ[i] && i < 1023) {
+        env_backup[i] = environ[i];
+        i++;
+    }
+    env_backup[i] = NULL;
+    environ = env_backup;
     
     head.clusId = -1;
     head.next = NULL;
