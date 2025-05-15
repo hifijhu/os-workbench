@@ -6,7 +6,6 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include <errno.h>
-#include <sys/wait.h>
 #include "fat32.h"
 
 size_t clus_sz;
@@ -212,73 +211,7 @@ int recoverpic(u32 clusId, char* path, int *clus_class){
     return 0;
 }
 
-void execute_command_with_pipe(const char *command, char *output, size_t output_size) {
-    int pipefd[2]; // 用于管道的文件描述符
-    pid_t pid;
 
-    // 创建管道
-    if (pipe(pipefd) == -1) {
-        perror("pipe failed");
-        exit(EXIT_FAILURE);
-    }
-
-    // 创建子进程
-    pid = fork();
-    if (pid == -1) {
-        perror("fork failed");
-        exit(EXIT_FAILURE);
-    }
-
-    if (pid == 0) {
-        // 子进程
-        close(pipefd[0]); // 关闭读端
-
-        // 将标准输出重定向到管道的写端
-        if (dup2(pipefd[1], STDOUT_FILENO) == -1) {
-            perror("dup2 failed");
-            exit(EXIT_FAILURE);
-        }
-
-        // 关闭管道的写端（已被重定向）
-        close(pipefd[1]);
-
-        // 使用 /bin/sh 执行命令
-        execl("/bin/sh", "sh", "-c", command, (char *)NULL);
-
-        // 如果 exec 失败
-        perror("execl failed");
-        exit(EXIT_FAILURE);
-    } else {
-        // 父进程
-        close(pipefd[1]); // 关闭写端
-
-        // 从管道的读端读取子进程的输出
-        ssize_t bytes_read = read(pipefd[0], output, output_size - 1);
-        if (bytes_read == -1) {
-            perror("read failed");
-            exit(EXIT_FAILURE);
-        }
-
-        // 确保输出以 '\0' 结尾
-        output[bytes_read] = '\0';
-
-        // 关闭管道的读端
-        close(pipefd[0]);
-
-        // 等待子进程结束
-        int status;
-        if (waitpid(pid, &status, 0) == -1) {
-            perror("waitpid failed");
-            exit(EXIT_FAILURE);
-        }
-
-        // 检查子进程的退出状态
-        if (WIFEXITED(status) && WEXITSTATUS(status) != 0) {
-            fprintf(stderr, "Command failed with exit code %d\n", WEXITSTATUS(status));
-            exit(EXIT_FAILURE);
-        }
-    }
-}
 
 void dir_traversal(struct dnode* head, int * clus_class){
     int ndents = clus_sz / sizeof(struct fat32dent);
@@ -308,8 +241,18 @@ void dir_traversal(struct dnode* head, int * clus_class){
                 continue;
             }
             char checksum[256];
-            execute_command_with_pipe("/usr/bin/ls", checksum, sizeof(checksum));
-            printf("Output: %s\n", checksum);
+            
+            FILE *fp = popen("echo Hello World", 'r');
+            if (fp == NULL) {
+                printf ("Error opening file unexist.ent: %s\n",strerror(errno));
+                exit(EXIT_FAILURE);
+            }
+            if (fgets(checksum, sizeof(checksum), fp) == NULL) {
+                perror("fgets failed");
+                pclose(fp);
+                exit(EXIT_FAILURE);
+            }
+            pclose(fp);
             
             FILE * fd = fopen("record.txt", "w");
             if (fwrite(checksum, sizeof(checksum), 1, fd) != 1) {
