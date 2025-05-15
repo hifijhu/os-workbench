@@ -182,15 +182,32 @@ int recoverpic(u32 clusId, char* path, int *clus_class){
     size_t width = bmp->width;
     size_t offset = bmp->offset;
     FILE * fd = fopen(path, "w");
+    if (fd == NULL) {
+        perror("Failed to open file");
+        fclose(fd);
+        return -1;
+    }
     void* p = cluster_to_sec(clusId);
     while(bmp_size > clus_sz){
-        if((clus_class[clusId] != CLUS_BMPHDR) && (clus_class[clusId] != CLUS_BMP)) return -1;
-        fwrite(p, clus_sz, 1, fd);
+        if((clus_class[clusId] != CLUS_BMPHDR) && (clus_class[clusId] != CLUS_BMP)) {
+            fclose(fd);
+            perror("wrong class");
+            return -1;
+        }
+        if (fwrite(p, clus_sz, 1, fd) != 1) {
+            perror("Failed to write to file");
+            fclose(fd);
+            return -1;
+        }
         clusId++;
         bmp_size -= clus_sz;
         p = cluster_to_sec(clusId);
     }
-    fwrite(p, bmp_size, 1, fd);
+    if (fwrite(p, bmp_size, 1, fd) != 1) {
+        perror("Failed to write to file");
+        fclose(fd);
+        return -1;
+    }
     fclose(fd);
     return 0;
 }
