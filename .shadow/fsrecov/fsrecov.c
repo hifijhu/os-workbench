@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
     setbuf(stdout, NULL);
-
+    system("echo test");
     assert(sizeof(struct fat32hdr) == 512);
     assert(sizeof(struct fat32dent) == 32);
 
@@ -241,7 +241,7 @@ void dir_traversal(struct dnode* head, int * clus_class){
                 continue;
             }
             char checksum[256];
-            system("echo test");
+            
             FILE *fp = popen("echo Hello World", "r");
             if (fp == NULL) {
                 printf ("Error opening file unexist.ent: %s\n",strerror(errno));
