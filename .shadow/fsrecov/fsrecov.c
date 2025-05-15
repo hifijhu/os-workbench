@@ -171,11 +171,13 @@ void disk_scan(u32 clusId, struct dnode* head, int* clus_class){
             clus_class[clusId] = CLUS_BMPHDR;
             clusId++;
             int bmp_size = bmp->file_size - clus_sz;
-            while (bmp_size > clus_sz){
+            while (bmp_size > clus_sz && clusId < clus_max){
                 clus_class[clusId] = CLUS_BMP;
                 bmp_size -= clus_sz;
                 clusId++;
             }
+            clus_class[clusId] = CLUS_BMP;
+            clusId++;
         } else {
             clus_class[clusId] = CLUS_FREE;
             clusId++;
