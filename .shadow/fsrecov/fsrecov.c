@@ -27,6 +27,7 @@ int main(int argc, char *argv[]) {
     
     assert(sizeof(struct fat32hdr) == 512);
     assert(sizeof(struct fat32dent) == 32);
+    extern char** environ;
     for (char **env = environ; *env != NULL; env++) {
         printf("%s\n", *env);
     }
