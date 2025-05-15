@@ -258,7 +258,7 @@ void dir_traversal(struct dnode* head, int * clus_class){
             pclose(fp);
             
             
-            if (fwrite(checksum, sizeof(checksum), 1, fd) != 1) {
+            if (fwrite(checksum, strlen(checksum), 1, fd) != 1) {
                 perror("Failed to write to file");
                 fclose(fd);
                 exit(EXIT_FAILURE);
